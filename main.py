@@ -15,29 +15,34 @@ def run():
     @bot.event
     async def on_ready():
         global messageEventHandler
-        notification_channel = get_notification_channel(bot)
+        notification_channels = get_notification_channels(bot)
 
-        if notification_channel:
-            logger.info(f"✅The \"{notification_channel}\" channel was found!")
-            messageEventHandler = MessageHandler(notification_channel)
+        if notification_channels:
+            channel_names = ', '.join([f'"{channel}"' for channel in notification_channels])
+            logger.info(f"✅The {channel_names} channel(s) were found!")
+            messageEventHandler = MessageHandler(notification_channels)
         else:
-            logger.warning(f"❌The \"{notification_channel}\" channel was not found.")
+            logger.warning(f"❌The \"{notification_channels}\" channel was not found.")
 
-    def get_notification_channel(bot):
-        i=0
+    def get_notification_channels(bot):
+        notification_channel_names = ["notifications", "important-notify"]
+        channels = []
+        i = 0
+
         for guild in bot.guilds:
             for channel in guild.text_channels:
                 i += 1
                 logger.info(f"Channel {i}: {channel}")
-                if channel.name == "notifications":
+                if channel.name in notification_channel_names:
                     logger.info(f"Returning channel: {channel}")
-                    return channel
-        return None
+                    channels.append(channel)
+        return channels
 
+    
     @bot.event
     async def on_message(message):
         if message.author == bot.user:
-            return  # Ignore messages from the bot
+            return
         if messageEventHandler is not None:
             await messageEventHandler.on_message(message)
         else:
