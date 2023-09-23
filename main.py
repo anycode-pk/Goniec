@@ -5,7 +5,7 @@ from discord.ext import commands
 logger = settings.logging.getLogger("bot")
 messageEventHandler = None
 
-not_important_roles = ["Świeżak", "GameDev"]
+defined_not_important_roles = ["Świeżak", "GameDev", "dupa"]
 all_roles = []
 
 def run():
@@ -28,37 +28,32 @@ def run():
     @bot.event
     async def on_ready():
         global messageEventHandler
-        notification_channels = get_notification_channels(bot)
 
-        all_roles_object, not_important_roles = get_roles()
-        logger.info(f"All server roles: {', '.join([role.name for role in all_roles_object])}")
-        logger.info(f"Not important roles: ")
-
-
+        get_notification_from_those_channel_names, all_server_text_channels = get_channels(bot)
+        all_roles_object, not_important_roles_objects = get_roles()
         
-        if notification_channels:
-            channel_names = ', '.join([f'"{channel}"' for channel in notification_channels])
-            logger.info(f"✅The {channel_names} channel(s) were found!")
-            messageEventHandler = MessageHandler(notification_channels[1])
+        if get_notification_from_those_channel_names:
+            messageEventHandler = MessageHandler(get_notification_from_those_channel_names[1])
         else:
-            logger.warning(f"❌The \"{notification_channels}\" channel was not found.")
+            logger.warning(f"❌The \"{get_notification_from_those_channel_names}\" channel(s) w not found.")
         
-
-    def get_notification_channels(bot):
-        notification_channel_names = ["announcements-all", "info-member", "staże", "member-only-chat", "chess-robot", 
+    def get_channels(bot):
+        get_notification_from_those_channel_names = ["announcements-all", "info-member", "staże", "member-only-chat", "chess-robot", 
                                       "apka", "table-booking-app", "whiteboard-photos", "spotkania", "game-dev", 
                                       "enterprise", "mobile-dev", "wycieczka", "priv-debata", "inter-chat"]
         notification_channels = []
+        all_server_text_channels = []
         i = 0
 
         for guild in bot.guilds:
             for channel in guild.text_channels:
-                i += 1
-                logger.info(f"Channel {i}: {channel}")
-                if channel.name in notification_channel_names:
-                    logger.info(f"Returning channel: {channel}")
+                all_server_text_channels.append(channel.name)
+                if channel.name in get_notification_from_those_channel_names:
                     notification_channels.append(channel)
-        return notification_channels
+        logger.info(f"✅Important channel list({len(notification_channels)}): \"{', '.join(channel.name for channel in notification_channels)}\" were found in server!")
+        logger.info(f"All text server channel list({len(all_server_text_channels)}): \"{', '.join(channel for channel in all_server_text_channels)}\".")
+
+        return notification_channels, all_server_text_channels
 
     
     @bot.event
@@ -68,30 +63,36 @@ def run():
         if message.content.startswith('$'):
             logger.info("The message starts with '$'. Ommitting message.")
             return
-        if message.author.roles in not_important_roles:
+        if message.author.roles in defined_not_important_roles:
             logger.info(f"{message.author.display_name} has role '{message.author.role}'. Ommitting message.")
             return
         if messageEventHandler is not None:
             await messageEventHandler.on_message(message)
         else:
-            logger.warning("MessageEventHandler is null")    
-        await bot.process_commands(message) # <- nie usuwac xdd
+            logger.warning("❌MessageEventHandler is null")    
+        await bot.process_commands(message)
 
     def get_roles():
+        all_roles_objects = []
         all_roles = []
         not_important_roles_objects = []
+        not_found_important_roles = []
 
+        logger.info(f"Declared not important roles list: {defined_not_important_roles}")
         for guild in bot.guilds:
             for role in guild.roles:
-                all_roles.append(role)
-                if role.name in not_important_roles:
+                all_roles_objects.append(role)
+                all_roles.append(role.name)
+                if role.name in defined_not_important_roles:
                     not_important_roles_objects.append(role)
-        logger.info(f"Declared not important roles list: {not_important_roles}")
-        for role_name in not_important_roles:
-            logger.info(f"✅not_important_role: '{role_name}' found.")
-        
-        logger.warning(f"❌The following roles were not found: {', '.join(not_important_roles)}")
-        return all_roles, not_important_roles
+                    not_found_important_roles.append(role.name)
+                    logger.info(f"✅not_important_role: '{role.name}' found in server.")
+
+        roles_wrongly_declared = [role for role in defined_not_important_roles if role not in all_roles]
+        logger.info(f"❌Wrongly declared not important roles: {roles_wrongly_declared}")
+
+        logger.info(f"✅All server roles ({len(all_roles)}): {', '.join([role.name for role in all_roles_objects])}")
+        return all_roles_objects, not_important_roles_objects
     
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
 
