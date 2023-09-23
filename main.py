@@ -63,7 +63,15 @@ def run():
         if message.content.startswith('$'):
             logger.info("The message starts with '$'. Ommitting message.")
             return
-        if message.author.roles in defined_not_important_roles:
+        author_roles_names = get_author_roles(message)
+        if [author_role_name in author_roles_names for author_role_name in defined_not_important_roles]:
+        #if any(author_role_name in defined_not_important_roles for author_role_name in author_roles_names):
+            not_important_author_roles = [role for role in author_roles_names if role in defined_not_important_roles]
+            logger.warning(f"❌Author of message has ({len(not_important_author_roles)}) not important role(s): {not_important_author_roles}. Ommitting message.")
+            return
+        logger.info(f"Author of message has ({len(author_roles_names)}) role(s) and they are important: {author_roles_names}")
+        if author_roles_names in defined_not_important_roles:
+            logger.info(f"###### {message.author.roles} ##")
             logger.info(f"{message.author.display_name} has role '{message.author.role}'. Ommitting message.")
             return
         if messageEventHandler is not None:
@@ -93,6 +101,9 @@ def run():
 
         logger.info(f"✅All server roles ({len(all_roles)}): {', '.join([role.name for role in all_roles_objects])}")
         return all_roles_objects, not_important_roles_objects
+    
+    def get_author_roles(message):
+        return [role.name for role in message.author.roles] 
     
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
 

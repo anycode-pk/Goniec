@@ -13,24 +13,21 @@ class MessageHandler():
         else:
             message_content = message.content
         
-        await self.notifications_channel.send(
-            f'New message from \'{message.author}\' in channel \'{message.channel}\' with content \'{message_content}\'')
+        # Gotowy template wiadomosci do wyslania na messenger (string)
+        await self.notifications_channel.send(f'New message from \'{message.author.display_name}\' in channel \
+                                              \'{message.channel}\' with content \'{message_content}\'')
 
     async def on_message(self, message):
-        logger.info(f'Message from \'{message.author.display_name}\' in channel \'{message.channel}\' {message.content}')
+        logger.info(f'Message from \'{message.author.display_name}\' in channel \'{message.channel}\' with content \'{message.content}\'')
         await self.notify(message)
 
-# to-do
-# jesli message od zarzadu, opiekunow - dodaj pattern
-# MOCK serwera kola aby latwiej sie testowalo.
-# w zaleznosci od roli, wyslij albo nie powiadomienie do messenger'a.
-# jesli oznaczony @Czlonek to wtedy koniecznie wyslij powiadomienie.
-# dodaj komende '--help' ktora daje info o bocie.
-# powitanie nowych czlonkow
-# pomin powiadomienia od roli 'swiezak'
-# dodaj komende historie kola 
-
-# to check if works:
-# usun wykrywanie wiadomosci zaczynajacych sie na '#' '$'
+# TO-DO:
 
 # WYSLIJ JSON'A
+
+# jesli message od zarzadu, opiekunow - dodaj pattern
+# jesli oznaczony @Czlonek to wtedy koniecznie wyslij powiadomienie.
+
+# dodaj komende '--help' ktora daje info o bocie.
+# powitanie nowych czlonkow
+# dodaj komende historie kola
