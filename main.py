@@ -64,14 +64,12 @@ def run():
             logger.info("The message starts with '$'. Ommitting message.")
             return
         author_roles_names = get_author_roles(message)
-        if [author_role_name in author_roles_names for author_role_name in defined_not_important_roles]:
-        #if any(author_role_name in defined_not_important_roles for author_role_name in author_roles_names):
+        if any([author_role_name in author_roles_names for author_role_name in defined_not_important_roles]):
             not_important_author_roles = [role for role in author_roles_names if role in defined_not_important_roles]
-            logger.warning(f"❌Author of message has ({len(not_important_author_roles)}) not important role(s): {not_important_author_roles}. Ommitting message.")
+            logger.warning(f"❌{message.author.display_name} of message has ({len(not_important_author_roles)}) not important role(s): {not_important_author_roles}. Ommitting message.")
             return
-        logger.info(f"Author of message has ({len(author_roles_names)}) role(s) and they are important: {author_roles_names}")
+        logger.info(f"{message.author.display_name} of message has ({len(author_roles_names)}) role(s) and they are important: {author_roles_names}")
         if author_roles_names in defined_not_important_roles:
-            logger.info(f"###### {message.author.roles} ##")
             logger.info(f"{message.author.display_name} has role '{message.author.role}'. Ommitting message.")
             return
         if messageEventHandler is not None:
