@@ -23,9 +23,6 @@ async def run():
     await bot.add_cog(Utilities.Utilities(bot))
     await bot.add_cog(EventHandler.EventHandlers(bot))
 
-    #bot.run(settings.DISCORD_API_SECRET, root_logger=True)
-    #bot.load_extension(Utilites.Utilites(bot))
-
 if __name__ == "__main__":
     asyncio.run(run()) 
     bot.run(settings.DISCORD_API_SECRET, root_logger=True)
