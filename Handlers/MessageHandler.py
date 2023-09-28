@@ -2,7 +2,8 @@ import discord, settings, json
 
 logger = settings.logging.getLogger("bot")
 
-class MessageHandler():
+class MessageHandler:
+    
     def __init__(self, notifications_channel):
         self.notifications_channel = notifications_channel
 
@@ -23,7 +24,7 @@ class MessageHandler():
             "content": message_content
         }
 
-        message_json = json.dumps(message_obj, indent=4, separators=(". ", " = "), ensure_ascii=False)  # Use ensure_ascii=False to handle non-ASCII characters)
+        message_json = json.dumps(message_obj, indent=4, separators=(". ", " = "), ensure_ascii=False)
         logger.info(f"Sending message json:")
         logger.info(message_json)
         return await self.notifications_channel.send(message_json)
@@ -42,9 +43,10 @@ class MessageHandler():
 
 # TO-DO:
 
-# Dodaj komende '-history' historie kola
-# Powitanie nowych czlonkow
+# dodaj komendy:
+# '-history' history of our organization
+# '-members' info about our members
 
-# wyslij notification ze ktos dolaczyl.
+# sprawdz czy rola "Freshman" (swiezak) moze ustawiac sobie nick 
 
-# What if role changes? will it fetch new data? Or once started it will have those values? YES it fetches changes! :=D
+# wyslij obrazek podczas witania nowych czlonkow
