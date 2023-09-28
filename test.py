@@ -17,7 +17,7 @@ graph_endp = "https://graph.facebook.com/v18.0/"
 #send_req("GET", graph_endp + pageid +  "?access_token=" + pagetoken)
 send_req("GET", graph_endp + pageid + "/conversations?fields=participants,messages{id, message}&access_token=" + pagetoken)
 
-send_req("POST", graph_endp + pageid + "/messages?recipient={id:6442179169244412}&message={text:'ZADZIALAJ'}&messaging_type=RESPONSE&access_token=" + pagetoken)
+send_req("POST", graph_endp + pageid + "/messages?recipient={id:6442179169244412}&message={text:'ZADZIALAJ2'}&messaging_type=RESPONSE&access_token=" + pagetoken)
 
 #os.system("curl -i -X POST \"https://graph.facebook.com/v18.0/" + pageid + "/messages" + recipient + messaging_type + message + access_token + "\"")
 
