@@ -13,7 +13,7 @@ class FacebookInterface():
         self.fbpage_api_access_token = settings.FBPAGE_API_SECRET
         self.fbpage_page_id = settings.FBPAGE_ID
 
-        # should this be set up here on in env?
+        # should this be set up here or in env?
         self.fb_user_id_list = []
         self.fb_graph_endpoint = "https://graph.facebook.com/v18.0/" + self.fbpage_api_key
     pass
