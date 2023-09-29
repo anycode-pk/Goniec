@@ -53,13 +53,29 @@ class EventHandlers(commands.Cog):
             welcome_message = (
                         f"👋 **Welcome to the server, {member.mention}!** 🎉\n\n"
                         f"🌟 We're excited to have you as part of our community. "
-                        f"Please take a moment to read the rules in {rules_channel.mention} and feel free to introduce yourself in the chat. "
+                        f"Please take a moment to read the rules in {rules_channel.mention} and feel free to introduce yourself in this channel. "
                         f"**Please change your nick to your first and last name 👤**, so that we can know who you are! 🤝"
                         f"If you have any questions, don't hesitate to ask. Enjoy your time here! 😊"
-                    )            
-            await welcome_channel.send(welcome_message)
+                    )
+            message_listener = await welcome_channel.send(welcome_message)
+            await message_listener.add_reaction("👍")
+
         else:
             logger.warning("Welcome channel is not set!")
+
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        channel_id = payload.channel_id
+        if channel_id == welcome_channel:  # Replace with your welcome channel's ID
+            guild_id = payload.guild_id
+            guild = discord.utils.find(lambda g: g.id == guild_id, self.bot.guilds)
+
+            if payload.emoji.name == "👍":  # Make sure it matches the emoji you used
+                role = discord.utils.get(guild.roles, name='Member')  # Replace 'Member' with your role's name
+                if role:
+                    member = guild.get_member(payload.user_id)
+                    if member:
+                        await member.add_roles(role)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
