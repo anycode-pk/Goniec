@@ -40,13 +40,3 @@ class MessageHandler:
     async def on_message(self, message, author_roles_names):
         await self.send_notification_str(message)
         await self.send_notification_json(message, author_roles_names)
-
-# TO-DO:
-
-# dodaj komendy:
-# '-history' history of our organization
-# '-members' info about our members
-
-# sprawdz czy rola "Freshman" (swiezak) moze ustawiac sobie nick 
-
-# wyslij obrazek podczas witania nowych czlonkow
