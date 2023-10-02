@@ -11,7 +11,7 @@ Facebook API requires two values to function properly. Both are set in `.env`:
 1. `FB_PAGE_ID`
 2. `FB_PAGE_ACCESS`
 
-Not sure whether `FB_PAGE_ACCESS` needs to be reset every so often - needs testing.
+Not sure whether `FB_PAGE_ACCESS` needs to be reset every so often. I have acquired a 'long-lived page access token', which shouldn't expire, but who knows what Facebook will do.
 User IDs, API endpoints etc. are handled by the module itself.
 
 ## Usage

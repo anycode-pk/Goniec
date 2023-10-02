@@ -8,8 +8,6 @@ load_dotenv(find_dotenv())
 DISCORD_API_SECRET = os.getenv("DISCORD_API_TOKEN")
 
 FB_PAGE_ID = os.getenv("FB_PAGE_ID")
-FB_APP_ID = os.getenv("FB_APP_ID")
-FB_APP_SECRET = os.getenv("FB_APP_SECRET")
 FB_PAGE_ACCESS_TOKEN = os.getenv("FB_PAGE_ACCESS_TOKEN")
 
 LOGGING_CONFIG = {
