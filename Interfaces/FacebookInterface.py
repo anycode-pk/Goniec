@@ -9,20 +9,15 @@ logger = settings.logging.getLogger("bot")
 
 class FacebookInterface():
     def __init__(self):
-        # set up stuff like api keys and user ids here
-        self.fbpage_api_access_token = settings.FBPAGE_API_SECRET
-        self.fbpage_page_id = settings.FBPAGE_ID
-
-        # should this be set up here or in env?
-        self.fb_user_id_list = []
-        self.fb_graph_endpoint = "https://graph.facebook.com/v18.0/" + self.fbpage_api_key
-    pass
+        self._page_access_token = settings.FB_PAGE_ACCESS_TOKEN
+        self._page_id = settings.FB_PAGE_ID
+        self._graph_endpoint = "https://graph.facebook.com/v18.0/" + self._page_id + "/"
 
     # string helpers
 
     # i yoinked this from paul
     def _trim_message_content(self, message):
-        message_words = message.content.split()
+        message_words = message.split()
         if len(message_words) > 10:
             message_trimmed = ' '.join(message_words[:10]) + '...'
         else:
@@ -30,45 +25,72 @@ class FacebookInterface():
         return message_trimmed
 
 
-    def _format_message(self, message_json):
-        message_trimmed = self._trim_message_content(message_json.content)
-        return f"{message_json.author} ({message_json.channel}): {message_trimmed}"
+    def _format_message(self, message_obj):
+        message_trimmed = self._trim_message_content(message_obj['content'])
+        return f"{message_obj['author']} ({message_obj['channel']}): {message_trimmed}"
 
-    # https helpers
+    # http requests
+
+    def _graph_get(self, payload_obj, endpoint_suffix):
+        return requests.get(self._graph_endpoint + endpoint_suffix, params=payload_obj)
+    
+    def _graph_post(self, payload_obj, endpoint_suffix):
+        return requests.post(self._graph_endpoint + endpoint_suffix, json=payload_obj)
+
+
+    # request helper functions
+
+    def _get_users(self):
+        user_id_list = []
+        payload = {
+                "fields": "participants",
+                "access_token": self._page_access_token
+                }
+        response = self._graph_get(payload, "conversations")
+        users = response.json()
+        for convo in users['data']:
+            user_id_list.append(convo['participants']['data'][0]['id'])
+        return user_id_list
+
+
 
     def _create_message_payload(self, message_string, user_id):
-        fb_payload_json = {
-                "recipient" = "\{id:{user_id}\}",
-                "message" = message_string,
-                "access_token" = self.fbpage_api_access_token
+        payload_obj = {
+                "recipient":  {
+                    "id": user_id
+                    },
+                "message": {
+                    "text": message_string
+                    },
+                "messaging_type": "MESSAGE_TAG",
+                "tag": "CONFIRMED_EVENT_UPDATE",
+                "access_token": self._page_access_token
                 }
+        return payload_obj
+        
+        fb_payload_json = json.dumps(fb_payload)
         return fb_payload_json
-
-    def _fb_graph_post(self, fb_payload_json, endpoint_suffix):
-        return requests.get(self.fb_graph_endpoint + endpoint_suffix, json=fb_payload_json)
-    
-    def _fb_graph_post(self, fb_payload_json, endpoint_suffix):
-        requests.post(self.fb_graph_endpoint + endpoint_suffix, json=fb_payload_json)
 
 
     # actual interface
 
-    async def fb_send_privmessage(self, message_json, user_id):
+    def send_privmessage(self, message_obj, user_id):
         logger.info(f"{__name__}: sending private message to Facebook user {user_id}")
-        message_string = self._format_message(message_json)
-        payload_json = self._create_message_payload(message_string, user_id) 
+        message_string = self._format_message(message_obj)
+        payload_obj = self._create_message_payload(message_string, user_id) 
         try:
-            self._fb_graph_post(payload_json, "messages")
+            response = self._graph_post(payload_obj, "messages")
         except:
             logger.error(f"{__name__}: could not send message to Facebook user {user_id}")
         return 
 
 
-    async def fb_broadcast_message(self, message_json):
+    def broadcast_message(self, message_obj):
         logger.info(f"{__name__}: received message broadcast request")
-        
-        for user_id in self.fb_user_id_list:
-            self.fb_send_privmessage(message_json, user_id)
+       
+        user_id_list = self._get_users()
+        for user_id in user_id_list:
+            self.send_privmessage(message_obj, user_id)
 
         logger.info(f"{__name__}: broadcast finished")
         return 
