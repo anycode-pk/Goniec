@@ -11,6 +11,7 @@ x = {
         "content": text
         }
 
-fb.send_privmessage(x, "6442179169244412")
+
+fb.send_privmessage(x, "6442179169244412") # "Goniec Anycode" (user)'s id
 
 fb.broadcast_message(x)
