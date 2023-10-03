@@ -2,7 +2,7 @@
 
 ## Introduction
 
-AnyCode Bot is a Discord bot designed for the AnyCode community server.
+AnyCode Bot is a Discord bot designed for the AnyCode community and it serves a representative function.
 
 ## Features
 
