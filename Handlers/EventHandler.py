@@ -16,6 +16,9 @@ class EventHandlers(commands.Cog):
         global messageEventHandler
         global welcome_channel
         global rules_channel
+        global user_role
+        global member_role
+
 
         get_notification_from_those_channel_names, all_server_text_channels, all_server_text_channels_object = Utilities.Utilities.get_channels(self.bot)
         all_roles_object, not_important_roles_objects = Utilities.Utilities.get_roles(self.bot)
@@ -29,6 +32,14 @@ class EventHandlers(commands.Cog):
             messageEventHandler = MessageHandler(get_notification_from_those_channel_names[1])
         else:
             logger.warning(f"❌The \"{get_notification_from_those_channel_names}\" channel(s) w not found.")
+
+        for role in all_roles_object:
+            if role.name.lower() == 'user':
+                user_role = role
+                logger.info(f'Role {role} assigned to a variable user_role')
+            if role.name.lower() == 'member':
+                member_role = role
+                logger.info(f'Role {role} assigned to a variable member_role')
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -51,31 +62,26 @@ class EventHandlers(commands.Cog):
         logger.info(f"User \'{member.name}\' has joined the server!")
         if welcome_channel is not None:
             welcome_message = (
-                        f"👋 **Welcome to the server, {member.mention}!** 🎉\n\n"
-                        f"🌟 We're excited to have you as part of our community. "
-                        f"Please take a moment to read the rules in {rules_channel.mention} and feel free to introduce yourself in this channel. "
-                        f"**Please change your nick to your first and last name 👤**, so that we can know who you are! 🤝"
-                        f"If you have any questions, don't hesitate to ask. Enjoy your time here! 😊"
+                        f"🎉 **Welcome to the server, {member.mention}!** 🎉\n\n"
+                        f"🌟 We're excited to have you as part of our coding community!🌟\n"
+                        f"**Please change your nick to your first and last name 👤**, so that we can know who you are! 🤝\n"
+                        f"If you have any questions, don't hesitate to ask here. Enjoy your time with us!"
                     )
             message_listener = await welcome_channel.send(welcome_message)
-            await message_listener.add_reaction("👍")
-
+            await message_listener.add_reaction("👋")
         else:
             logger.warning("Welcome channel is not set!")
 
+
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        channel_id = payload.channel_id
-        if channel_id == welcome_channel:  # Replace with your welcome channel's ID
-            guild_id = payload.guild_id
-            guild = discord.utils.find(lambda g: g.id == guild_id, self.bot.guilds)
-
-            if payload.emoji.name == "👍":  # Make sure it matches the emoji you used
-                role = discord.utils.get(guild.roles, name='Member')  # Replace 'Member' with your role's name
-                if role:
-                    member = guild.get_member(payload.user_id)
-                    if member:
-                        await member.add_roles(role)
+        if payload.channel_id == rules_channel.id:
+            if payload.emoji.name == "✅": 
+                if user_role:
+                    freshman = payload.member
+                    if freshman:
+                        await payload.member.add_roles(user_role, reason=f"Role assigned by Goniec because {payload.member.name} accepted the rules" )
+                        logger.info(f"User '{freshman.name}' reacted to a welcome message and bot assigned to him role '{user_role}'")
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
@@ -83,8 +89,8 @@ class EventHandlers(commands.Cog):
         if welcome_channel is not None:
             farewell_message = (
                 f"😢 **{member.display_name} has left the server.**\n\n"
-                f"👋 We'll miss you! If you ever decide to return, you're always welcome here. "
-                f"Feel free to stay in touch with us. Take care!"
+                f"We'll miss you! If you ever decide to return, you're always welcome here. "
+                f"Take care!👋 "
             )
             await welcome_channel.send(farewell_message)
         else:
