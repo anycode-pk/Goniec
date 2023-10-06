@@ -51,7 +51,7 @@ class EventHandlers(commands.Cog):
             logger.warning(f"❌{message.author.display_name} of message has ({len(not_important_author_roles)}) not important role(s): {not_important_author_roles}. Ommitting message.")
             return
         logger.info(f"{message.author.display_name} of message has ({len(author_roles_names)}) role(s) and they are important: {author_roles_names}")
-        await self.bot.process_commands(message)
+        #await self.bot.process_commands(message)
         if messageEventHandler is not None and not message.content.startswith('$'):
             await messageEventHandler.on_message(message, author_roles_names)
         else:
