@@ -1,8 +1,11 @@
+import asyncio
 from discord.ext import commands
 import settings
 import discord
 
+
 logger = settings.logging.getLogger("bot")
+PURPLE_COLOR = discord.Color.purple()
 
 achievements_table = [
     ["✅","2016", "Promocja WEiI w ramach Dni Otwartych na Politechnice Koszalińskiej"],
@@ -34,13 +37,17 @@ class CommandManager(commands.Cog):
         self.bot = bot
 
     @commands.command(
-        aliases=['i'],
+        aliases=['a'],
         help="Provide info about AnyCode organization",
         description="",
         brief="Info about AnyCode"
     )
-    async def info(self, ctx):
-        """Info about AnyCode"""
+    async def about(self, ctx):
+        """
+        Usage: $about or $a
+
+        About AnyCode
+        """
         logger.info("Executting command $info...")
         await ctx.send("We are student science club \'AnyCode\' at the Koszalin University of Technology")
 
@@ -51,7 +58,10 @@ class CommandManager(commands.Cog):
         brief="History of AnyCode"
     )
     async def history(self, ctx):
-        """Provide history of AnyCode"""
+        """
+        Usage: $history or $his
+
+        Provide history of AnyCode"""
         logger.info("Executting command $history...")
         await ctx.send("Our organization has a rich history...")
 
@@ -62,7 +72,11 @@ class CommandManager(commands.Cog):
         brief="Members of AnyCode"
     )
     async def members(self, ctx):
-        """Provide information about AnyCode members"""
+        """
+        Usage: $members or $m
+
+        Provide information about AnyCode members
+        """
         await ctx.send("Our organization is comprised of a diverse group of members...")
     
     @commands.command(
@@ -72,14 +86,72 @@ class CommandManager(commands.Cog):
         brief="Achievements of AnyCode"
     )
     async def achievements(self,ctx):
-        """Provide information about AnyCode achievements"""
+        """
+        Usage: $achievements or $ach
+
+        Provide information about AnyCode achievements
+        """
         table_content = "\n-----\n".join([" | ".join(row) for row in achievements_table])
         embed = discord.Embed(
             title="Lista Osiągnięć i Działań Koła",
             description=f"```\n{table_content}```",
-            color=discord.Color.purple() #kolor embedu
+            color=PURPLE_COLOR
         )
         await ctx.send(embed=embed)
+
+    @commands.command(
+    aliases=['s'],
+    help="Links to AnyCode's social media platforms",
+    description="This command provides links to AnyCode's official social media profiles and website",
+    brief="Access AnyCode's social media and contact"
+    )
+    async def social(self, ctx):
+        """
+        Usage: $social or $s
+
+        Provides links to AnyCode's official social media profiles and contact.
+        Stay connected with us on various platforms!
+        """
+        embed = discord.Embed(
+            title="🌐 AnyCode Social Links and contact",
+            description="Stay connected with us on various platforms!",
+            color=PURPLE_COLOR
+        )
+
+        embed.add_field(name="Facebook", value="[Facebook](https://www.facebook.com/anycodepk)")
+        embed.add_field(name="GitHub", value="[GitHub](https://github.com/anycode-pk)")
+        embed.add_field(name="Contact", value="anycodepk@gmail.com")
+        #embed.add_field(name="LinkedIn", value="[LinkedIn](https://www.linkedin.com/company/anycode)")
+
+        await ctx.send(embed=embed)
+
+    @commands.command(
+    aliases=['f'],
+    help="Encourages members to provide feedback or suggestions to help improve the organization's activities and services",
+    description="Usage: $feedback\n\nEncourages members to provide feedback or suggestions to help improve the organization's activities and services",
+    brief="Encourage members to provide valuable feedback and suggestions."
+    )
+    async def feedback(self, ctx, *, feedback_message: str = None):
+        """
+        Usage: $feedback or $f
+
+        Encourages members to provide feedback or suggestions to help improve the organization's activities and services.
+        """
+        if feedback_message:
+            feedback_message = feedback_message.strip()
+        else:
+            await ctx.send("Provide feedback message like this: `$feedback 'Your feedback message'`")
+            return
+        for guild in self.bot.guilds:
+            for text_channel in guild.text_channels:
+                if text_channel.name.lower() == 'feedback':
+                   feedback_channel = text_channel
+
+        if feedback_channel:
+            await feedback_channel.send(f"Feedback from '{ctx.author.display_name}' user:\n\n{feedback_message}")
+
+        await ctx.send("Thank you for your feedback! It has been forwarded to our team for review.")
+
 
 def setup(bot):
     bot.add_cog(CommandManager(bot))

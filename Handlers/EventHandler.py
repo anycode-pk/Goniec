@@ -5,6 +5,7 @@ from discord.ext import commands
 from Utilities import Utilities
 
 logger = settings.logging.getLogger("bot")
+global feedback_channel
 
 class EventHandlers(commands.Cog):
 
@@ -26,8 +27,13 @@ class EventHandlers(commands.Cog):
         for text_channel in all_server_text_channels_object:
             if text_channel.name.lower() == 'welcome':
                 welcome_channel = text_channel
+                logger.info(f"channel '{text_channel.name}' assigned to {welcome_channel} variable")
             if text_channel.name.lower() == 'rules':
                 rules_channel = text_channel
+                logger.info(f"channel '{text_channel.name}' assigned to {rules_channel} variable")
+            if text_channel.name.lower() == 'feedback':
+                feedback_channel = text_channel
+                logger.info(f"channel '{text_channel.name}' assigned to {feedback_channel} variable")
         if get_notification_from_those_channel_names:
             messageEventHandler = MessageHandler(get_notification_from_those_channel_names[1])
         else:
