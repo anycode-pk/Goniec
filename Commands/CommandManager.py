@@ -71,7 +71,7 @@ class CommandManager(commands.Cog):
         description="",
         brief="Achievements of AnyCode"
     )
-    async def members(self,ctx):
+    async def achievements(self,ctx):
         """Provide information about AnyCode achievements"""
         table_content = "\n-----\n".join([" | ".join(row) for row in achievements_table])
         embed = discord.Embed(
