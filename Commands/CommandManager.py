@@ -7,6 +7,31 @@ import discord
 logger = settings.logging.getLogger("bot")
 PURPLE_COLOR = discord.Color.purple()
 
+projects_list = [
+        {
+            "name": "GoniecBot",
+            "description": "This bot serves as a representative function for new discord server members. It's built using Discord.py and Python.",
+            "status": "In Development"
+        },
+        {
+            "name": "TableBooking",
+            "description": "TableBooking is a web application that allows you to book a table at your favorite restaurant. Using C#, .NET, PostgreSQL, Ionic, and Vue.",
+            "status": "In Development",
+            "github_link": "[GitHub](https://github.com/anycode-pk/TableBooking)"
+        },
+        {
+            "name": "Chicken Game",
+            "description": "Chicken Game is a 2D game written in C# and developed in the Unity engine.",
+            "status": "Active",
+            "github_link": "[GitHub](https://github.com/anycode-pk/ChickenGame)"
+        },
+        {
+            "name": "Chess Robot",
+            "description": "It's a chess arm that plays chess with you, controlled by a chess engine. It uses a Raspberry Pi and Python.",
+            "status": "In Development"
+        }
+    ]
+
 achievements_table = [
     ["✅","2016", "Promocja WEiI w ramach Dni Otwartych na Politechnice Koszalińskiej"],
     ["✅","2017", "Udział konferencji informatycznej (IT Aacademic Day – Szczecin) organizowany na uczelniach w całej Polsce przez studentów z Grup .NET i Grup IT skierowany do uczniów szkół średnich, studentów oraz osób zainteresowanych nowoczesnymi technologiami."],
@@ -152,6 +177,40 @@ class CommandManager(commands.Cog):
 
         await ctx.send("Thank you for your feedback! It has been forwarded to our team for review.")
 
+    @commands.command(
+    aliases=['p'],
+    help="Displays a list of current and past projects your organization has been developing, along with descriptions and status.",
+    description="Usage: $projects or $p\n\nDisplays a list of current and past projects your organization has been developing, along with descriptions and status.",
+    brief="List of organization's projects"
+    )
+    async def projects(self, ctx):
+        """
+        Usage: $projects or $p
+
+        Displays a list of current and past projects your organization has been developing, along with descriptions and status.
+        """
+        embed = discord.Embed(
+            title="List of Organization's Projects",
+            color=discord.Color.purple()
+        )
+
+        for project in projects_list:
+            name = project['name']
+            description = project['description']
+            status = project['status']
+            github_link = project.get('github_link', None)
+
+            field_value = f"**Description:** {description}\n**Status:** {status}"
+            if github_link:
+                field_value += f"\n{github_link}"
+
+            embed.add_field(
+                name=name,
+                value=field_value,
+                inline=False
+            )
+
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(CommandManager(bot))
