@@ -74,21 +74,18 @@ class CommandManager(commands.Cog):
         About AnyCode
         """
         logger.info("Executting command $info...")
-        await ctx.send("We are student science club \'AnyCode\' at the Koszalin University of Technology")
+        about_message = (
+            "Welcome to AnyCode, the Student Science Club at The Koszalin University of Technology! 🚀 Previously known as 'Grupa .NET'\n\n"
+            "👤 Our Patron: Doctor of Engineering Rafał Wojszczyk\n"
+            "🌐 We create software independently of any framework or language, "
+            "embracing the freedom to choose the best tools for the problem.\n"
+            "🤝 We work together because we are passionate about writing code and solving challenges.\n"
+            "🏢 We also have our own classroom in 103-1D. We meet there every Thursday at 2pm Come visit us!.\n"
+            "⏳ Fun Facts: 'Grupa .NET', now known as 'AnyCode' (since October 2023) has been active since 2008, that's over a decade of coding excellence! 🎉\n"
+            "More specific information about our organization can be found on our website or by contacting us.\n"
+        )
 
-    @commands.command(
-        aliases=['his'],
-        help="History of AnyCode",
-        description="",
-        brief="History of AnyCode"
-    )
-    async def history(self, ctx):
-        """
-        Usage: $history or $his
-
-        Provide history of AnyCode"""
-        logger.info("Executting command $history...")
-        await ctx.send("Our organization has a rich history...")
+        await ctx.send(about_message)
 
     @commands.command(
         aliases=['m'],
@@ -118,7 +115,7 @@ class CommandManager(commands.Cog):
         """
         table_content = "\n-----\n".join([" | ".join(row) for row in achievements_table])
         embed = discord.Embed(
-            title="Lista Osiągnięć i Działań Koła",
+            title="Lista of our achievements and our activities",
             description=f"```\n{table_content}```",
             color=PURPLE_COLOR
         )
