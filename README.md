@@ -2,47 +2,24 @@
 
 ## Introduction
 
-AnyCode Bot is a Discord bot designed for the AnyCode community and it serves a representative function.
+# This is the messenger branch
 
-## Features
+## Setup
 
-### Welcome and Goodbye Messages
-Whenever a user joins or leaves the server, the bot will send a welcome or goodbye message to the specified text channel. 
+Facebook API requires two values to function properly. Both are set in `.env`:
+1. `FB_PAGE_ID`
+2. `FB_PAGE_ACCESS`
 
-### Notification Forwarding
-The bot can forward notifications of Discord messages to a text channel. In the future, it will also support forwarding to other platforms like Messenger.
+Not sure whether `FB_PAGE_ACCESS` needs to be reset every so often. I have acquired a 'long-lived page access token', which shouldn't expire, but who knows what Facebook will do.
+User IDs, API endpoints etc. are handled by the module itself.
 
-### Commands
-All bot commands start with '$'. For example, to use the member command, you would type `$member` followed by the specific query.
-- **$member Command**: Get information about AnyCode members. This command provides details about organization members.
+## Usage
 
-- **$history Command**: Retrieve the history of AnyCode. This command can display the server's history, achievements, or any relevant information.
+Sample usage is shown in `fbtest.py`.
 
-- **$info Command**: Get information about AnyCode. Use this command to learn more about the organization, its purpose, and guidelines.
-  
-## Development
-
-The bot is designed with easy development in mind. You'll find predefined variables for server roles and channels within the codebase, making it straightforward to customize and extend the bot's functionality. The bot also includes robust logging to help you track its activities.
-
-## How to contribute
-
-1. Clone this repository.
-2. Create a Virtual Environment
-First, create a virtual environment to isolate the bot's dependencies. If you haven't already installed `virtualenv`, you can do so with pip:
-```bash
-pip install virtualenv
-```
-3. Create a virtual environment in your project directory:
-```bash
-virtualenv .venv
-```
-4. Install discord.py
-```bash
-pip install -U discord.py
-```
-5. Install python-dotenv for environment variable management
-```bash
-pip install python-dotenv
-```
-6. Configure the bot by adding 'DISCORD_API_TOKEN={token-string}' into .evn file
-*Important note: Don't share this token with anyone.*
+- `from Interfaces.FacebookInterface import FacebookInterface`
+- Create a `FacebookInterface` object
+- Create a message object, which is a Python object(! not raw json)
+- `FacebookInterface` provides two (public) methods:
+    - `send_privmessage(message_obj, user_id)` - sends a formatted private message to the selected User ID. This User ID is only Page-scoped, so you need to know it in advance. This will probably become a private function.
+    - `broadcast_message(message_obj)` - `FacebookInterface` fetches all User IDs that ever messaged the Page, and sends a formatted message to each User.
