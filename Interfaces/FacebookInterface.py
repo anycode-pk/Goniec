@@ -16,6 +16,7 @@ class FacebookInterface():
     # string helpers
 
     # i yoinked this from paul
+    # no problem, I yoinked this from ChatGPT 
     def _trim_message_content(self, message):
         message_words = message.split()
         if len(message_words) > 10:
