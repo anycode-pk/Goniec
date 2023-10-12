@@ -22,7 +22,7 @@ class FacebookInterface():
         if len(message_words) > 10:
             message_trimmed = ' '.join(message_words[:10]) + '...'
         else:
-            message_trimmed = message.content
+            message_trimmed = message
         return message_trimmed
 
 

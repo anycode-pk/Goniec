@@ -1,4 +1,5 @@
 import discord, settings, json
+from Interfaces.FacebookInterface import FacebookInterface
 
 logger = settings.logging.getLogger("bot")
 
@@ -6,11 +7,12 @@ class MessageHandler:
     
     def __init__(self, notifications_channel):
         self.notifications_channel = notifications_channel
+        self.fb_interface = FacebookInterface()
 
-    async def send_notification_str(self, message):
-        logger.info(f'(str)Message from \'{message.author.display_name}\' in channel \'{message.channel}\' with content \'{message.content}\'')
-        message_content = self.format_message_for_str(message)
-        return await self.notifications_channel.send(f'\'{message.author.display_name}\' in channel \'{message.channel}\' with content \'{message_content}\'')
+    # async def send_notification_str(self, message):
+    #     logger.info(f'(str)Message from \'{message.author.display_name}\' in channel \'{message.channel}\' with content \'{message.content}\'')
+    #     message_content = self.format_message_for_str(message)
+    #     return await self.notifications_channel.send(f'\'{message.author.display_name}\' in channel \'{message.channel}\' with content \'{message_content}\'')
         
     async def send_notification_json(self, message, author_roles_names):
         logger.info(f'(json)Message from \'{message.author.display_name}\' in channel \'{message.channel}\' with content \'{message.content}\'')
@@ -27,7 +29,9 @@ class MessageHandler:
         message_json = json.dumps(message_obj, indent=4, separators=(". ", " = "), ensure_ascii=False)
         logger.info(f"Sending message json:")
         logger.info(message_json)
-        return await self.notifications_channel.send(message_json)
+        #return await self.notifications_channel.send(message_json)
+        self.fb_interface.broadcast_message(message_obj)
+
     
     def format_message_for_str(self, message):
         message_words = message.content.split()
@@ -38,7 +42,7 @@ class MessageHandler:
         return message_content
     
     async def on_message(self, message, author_roles_names):
-        await self.send_notification_str(message)
+        #await self.send_notification_str(message)
         await self.send_notification_json(message, author_roles_names)
 
 # TO-DO:
