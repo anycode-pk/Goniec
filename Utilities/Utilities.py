@@ -1,5 +1,5 @@
 import settings, discord
-from Commands import CommandManager
+from Commands import Informations, Tools
 from discord.ext import commands
 
 logger = settings.logging.getLogger("bot")
