@@ -1,6 +1,6 @@
 from Handlers.MessageHandler import MessageHandler
-import settings, discord
-from Commands import CommandManager
+import settings, discord, datetime
+from Commands import Informations, Tools
 from discord.ext import commands
 from Utilities import Utilities
 
@@ -17,6 +17,7 @@ class EventHandlers(commands.Cog):
         global messageEventHandler
         global welcome_channel
         global rules_channel
+        global general_channel
         global user_role
         global member_role
 
@@ -34,6 +35,9 @@ class EventHandlers(commands.Cog):
             if text_channel.name.lower() == 'feedback':
                 feedback_channel = text_channel
                 logger.info(f"channel '{text_channel.name}' assigned to {feedback_channel} variable")
+            if text_channel.name.lower() == 'general':
+                general_channel = text_channel
+                logger.info(f"channel '{text_channel.name}' assigned to {general_channel} variable")
         if get_notification_from_those_channel_names:
             messageEventHandler = MessageHandler(get_notification_from_those_channel_names[1])
         else:
@@ -108,6 +112,14 @@ class EventHandlers(commands.Cog):
         else:
             logger.warning("Welcome channel is not set!")
 
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        channel = before.channel or after.channel
+        if "Meetings" in channel.name: # Insert voice channel ID
+            if (before.channel is None and after.channel is not None): # Member joins the defined channel
+                await general_channel.send(f"{member.display_name} joined voice channel {channel.name}")
+            elif ("Meetings" in channel.name) and (before.channel != after.channel):
+                await general_channel.send(f"{member.display_name} joined voice channel {after.channel.name}")
 
 async def setup(bot):
     await bot.add_cog(EventHandlers(bot))

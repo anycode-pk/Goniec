@@ -1,7 +1,7 @@
 from Handlers import MessageHandler, EventHandler
 import settings, discord
-from Commands import CommandManager
-from Utilities import Utilities
+from Commands import Informations, Tools
+from Utilities import Utilities, GoniecHelpCommand
 from discord.ext import commands
 import asyncio
 
@@ -19,9 +19,11 @@ async def run():
     intents.message_content = True
     intents.members = True
     bot = commands.Bot(command_prefix="$",intents=intents)
-    await bot.add_cog(CommandManager.CommandManager(bot))
+    await bot.add_cog(Informations.Informations(bot))
+    await bot.add_cog(Tools.Tools(bot))
     await bot.add_cog(Utilities.Utilities(bot))
     await bot.add_cog(EventHandler.EventHandlers(bot))
+    await bot.add_cog(GoniecHelpCommand.GoniecHelp(bot))
 
 if __name__ == "__main__":
     asyncio.run(run()) 
