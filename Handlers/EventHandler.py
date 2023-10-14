@@ -86,8 +86,14 @@ class EventHandlers(commands.Cog):
                 if user_role:
                     freshman = payload.member
                     if freshman:
-                        await payload.member.add_roles(user_role, reason=f"Role assigned by Goniec because {payload.member.name} accepted the rules" )
+                        await payload.member.add_roles(user_role, reason=f"Role assigned by Goniec because {payload.member.display_name} accepted the rules" )
                         logger.info(f"User '{freshman.name}' reacted to a welcome message and bot assigned to him role '{user_role}'")
+            else:
+                logger.info(f"Deleting react emoji in '{payload.channel_id}' for '{payload.member.display_name}' because it is other than '✅'")
+                message = await rules_channel.fetch_message(payload.message_id)
+                user = payload.member
+                if user and message:
+                    await message.remove_reaction(payload.emoji, user)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
