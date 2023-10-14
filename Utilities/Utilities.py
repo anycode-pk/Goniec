@@ -1,9 +1,9 @@
 import settings, discord
-from Commands import CommandManager
+from Commands import Informations, Tools
 from discord.ext import commands
 
 logger = settings.logging.getLogger("bot")
-defined_not_important_roles = ["Freshman", "Game Developer", "dupa"]
+defined_not_important_roles = ["Freshman", "Game Developer", "dupa", "User", "USER"]
 all_roles = []
 all_server_text_channels_object = []
 messageEventHandler = None

@@ -160,3 +160,8 @@ cython_debug/
 #.idea/
 
 .vscode/
+
+
+# vim swap files (i use vim btw)
+*.swp
+*.swo

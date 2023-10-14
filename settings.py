@@ -1,11 +1,14 @@
 import os
 import logging
 from logging.config import dictConfig
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv())
 
 DISCORD_API_SECRET = os.getenv("DISCORD_API_TOKEN")
+
+FB_PAGE_ID = os.getenv("FB_PAGE_ID")
+FB_PAGE_ACCESS_TOKEN = os.getenv("FB_PAGE_ACCESS_TOKEN")
 
 LOGGING_CONFIG = {
     "version": 1,
