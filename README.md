@@ -10,7 +10,7 @@ AnyCode Bot is a Discord bot designed for the AnyCode community and it serves a 
 Whenever a user joins or leaves the server, the bot will send a welcome or goodbye message to the specified text channel. 
 
 ### Notification Forwarding
-The bot can forward notifications of Discord messages to a text channel. In the future, it will also support forwarding to other platforms like Messenger.
+The bot can forward notifications of Discord messages to Messenger.
 
 ### Commands
 All bot commands start with '$'. For example, to use the member command, you would type `$member` followed by the specific query.
