@@ -13,13 +13,8 @@ Whenever a user joins or leaves the server, the bot will send a welcome or goodb
 The bot can forward notifications of Discord messages to Messenger.
 
 ### Commands
-All bot commands start with '$'. For example, to use the member command, you would type `$member` followed by the specific query.
-- **$member Command**: Get information about AnyCode members. This command provides details about organization members.
+All bot commands start with '$'. Type `$help` to get more infomation.
 
-- **$history Command**: Retrieve the history of AnyCode. This command can display the server's history, achievements, or any relevant information.
-
-- **$info Command**: Get information about AnyCode. Use this command to learn more about the organization, its purpose, and guidelines.
-  
 ## Development
 
 The bot is designed with easy development in mind. You'll find predefined variables for server roles and channels within the codebase, making it straightforward to customize and extend the bot's functionality. The bot also includes robust logging to help you track its activities.
@@ -44,5 +39,5 @@ pip install -U discord.py
 ```bash
 pip install python-dotenv
 ```
-6. Configure the bot by adding 'DISCORD_API_TOKEN={token-string}' into .evn file
+6. Configure the bot by adding 'DISCORD_API_TOKEN={token-string}' into .evn file. (Request for it on our discord server, on general text channel)
 *Important note: Don't share this token with anyone.*
