@@ -50,6 +50,11 @@ class EventHandlers(commands.Cog):
             if role.name.lower() == 'member':
                 member_role = role
                 logger.info(f'Role {role} assigned to a variable member_role')
+            if member_role == None:
+                logger.error('❌member_role not assigned')
+            if user_role == None:
+                logger.error('❌user_role not assigned')
+
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -86,7 +91,7 @@ class EventHandlers(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         if payload.channel_id == rules_channel.id:
-            if payload.emoji.name == "✅": 
+            if payload.emoji.name == "✅":
                 if user_role:
                     freshman = payload.member
                     if freshman:
