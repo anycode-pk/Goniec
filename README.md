@@ -2,25 +2,42 @@
 
 ## Introduction
 
-# This is the messenger branch
+AnyCode Bot is a Discord bot designed for the AnyCode community and it serves a representative and information function.
 
-## Setup
+## Features
 
-Facebook API requires two values to function properly. Both are set in `.env`:
-1. `DISCORD_API_TOKEN`
-2. `FB_PAGE_ID`
-3. `FB_PAGE_ACCESS`
+### Welcome and Goodbye Messages
+Whenever a user joins or leaves the server, the bot will send a welcome or goodbye message to the specified text channel. 
 
-Not sure whether `FB_PAGE_ACCESS` needs to be reset every so often. I have acquired a 'long-lived page access token', which shouldn't expire, but who knows what Facebook will do.
-User IDs, API endpoints etc. are handled by the module itself.
+### Notification Forwarding
+The bot can forward notifications of Discord messages to Messenger.
 
-## Usage
+### Commands
+All bot commands start with '$'. Type `$help` to get more infomation.
 
-Sample usage is shown in `fbtest.py`.
+## Development
 
-- `from Interfaces.FacebookInterface import FacebookInterface`
-- Create a `FacebookInterface` object
-- Create a message object, which is a Python object(! not raw json)
-- `FacebookInterface` provides two (public) methods:
-    - `send_privmessage(message_obj, user_id)` - sends a formatted private message to the selected User ID. This User ID is only Page-scoped, so you need to know it in advance. This will probably become a private function.
-    - `broadcast_message(message_obj)` - `FacebookInterface` fetches all User IDs that ever messaged the Page, and sends a formatted message to each User.
+The bot is designed with easy development in mind. You'll find predefined variables for server roles and channels within the codebase, making it straightforward to customize and extend the bot's functionality. The bot also includes robust logging to help you track its activities.
+
+## How to contribute
+
+1. Clone this repository.
+2. Create a Virtual Environment
+First, create a virtual environment to isolate the bot's dependencies. If you haven't already installed `virtualenv`, you can do so with pip:
+```bash
+pip install virtualenv
+```
+3. Create a virtual environment in your project directory:
+```bash
+virtualenv .venv
+```
+4. Install discord.py
+```bash
+pip install -U discord.py
+```
+5. Install python-dotenv for environment variable management
+```bash
+pip install python-dotenv
+```
+6. Configure the bot by adding 'DISCORD_API_TOKEN={token-string}' into .evn file. (Request for it on our discord server, on general text channel)
+*Important note: Don't share this token with anyone.*
